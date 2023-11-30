@@ -5,9 +5,10 @@ import { LogBox } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "../stories/src/pages/Login/Login.js";
-import Home from "../stories/src/pages/Home/Home.js";
-import Welcome from "../stories/src/pages/WelcomeScreen/Welcome.js";
+import Login from "./src/pages/Login/Login.js";
+import Home from "./src/pages/Home/Home.js";
+import Welcome from "./src/pages/WelcomeScreen/Welcome.js";
+import Stories from "./src/pages/Stories/StoriesPage.js"
 
 LogBox.ignoreAllLogs(true);
 
@@ -30,6 +31,11 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Stories"
+          component={Stories}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

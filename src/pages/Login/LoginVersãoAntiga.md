@@ -8,20 +8,15 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
-  Dimensions 
 } from "react-native";
 import LottieView from "lottie-react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import backPage from "../../../assets/images/backPage.svg";
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLowerHalfVisible, setLowerHalfVisible] = useState(true);
-
-  const window = Dimensions.get("window");
-  const isSmallDevice = window.width < 500; 
-  const shouldShowLowerHalf = isLowerHalfVisible && !isSmallDevice;
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -40,6 +35,7 @@ const Login = ({navigation}) => {
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
+     
     };
   }, []);
 
@@ -51,10 +47,7 @@ const Login = ({navigation}) => {
 
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={[
-        styles.container,
-        shouldShowLowerHalf ? null : styles.centeredContainer,
-      ]}
+      contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.upperHalf}>
@@ -92,7 +85,7 @@ const Login = ({navigation}) => {
         </View>
       </View>
 
-      {shouldShowLowerHalf && (
+      {isLowerHalfVisible && (
         <View style={styles.lowerHalf}>
           <ImageBackground
             style={styles.imageDiv}
@@ -156,14 +149,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    marginTop: "20%",
+    marginTop: "30%",
     fontSize: 15,
     fontWeight: "500",
     color: "white",
     fontStyle: "normal",
   },
   greetings: {
-    
+    marginTop: "10%",
     color: "#9E3AEC",
     fontSize: 36,
     fontStyle: "normal",
@@ -174,11 +167,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     width: "100%",
-  },
-  centeredContainer: {
-    justifyContent: "center",
-    marginBottom:"10%",
-    alignItems: "center",
   },
 });
 

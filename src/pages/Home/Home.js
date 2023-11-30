@@ -26,8 +26,8 @@ const Home = ({ navigation }) => {
     loadStories();
   }, []);
 
-  const handleStorySelection = (storyId) => {
-    navigation.navigate('ChatInteractionScreen', { storyId });
+  const handleStorySelection = (storyId,storyTitle) => {
+    navigation.navigate('Stories', { storyId,storyTitle });
   };
 
   return (
@@ -41,7 +41,7 @@ const Home = ({ navigation }) => {
         <Button
           key={story.id}
           title={story.title}
-          onPress={() => handleStorySelection(story.id)}
+          onPress={() => handleStorySelection(story.id,story.title)}
         />
       ))}
     </View>
