@@ -1,23 +1,20 @@
 // StorySelectionScreen.jsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button,  StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from 'axios';
-
 
 const Home = ({ navigation }) => {
   const [stories, setStories] = useState([]);
 
   useEffect(() => {
-
     const loadStories = async () => {
       try {
-        //const response = await axios.get('../../../public/json/historias.json');
-        //const jsonData = response.data;
+        // const response = await axios.get('../../../public/json/historias.json');
+        // const jsonData = response.data;
         const jsonData = require('../../../public/historias.json');
-        
 
-        setStories(jsonData); ''
+        setStories(jsonData);
       } catch (error) {
         console.error('Erro ao carregar histórias:', error);
       }
@@ -26,8 +23,8 @@ const Home = ({ navigation }) => {
     loadStories();
   }, []);
 
-  const handleStorySelection = (storyId,storyTitle) => {
-    navigation.navigate('Stories', { storyId,storyTitle });
+  const handleStorySelection = (storyId, storyTitle) => {
+    navigation.navigate('Stories', { storyId, storyTitle });
   };
 
   return (
@@ -35,16 +32,17 @@ const Home = ({ navigation }) => {
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-    <View>
-      <Text>Selecione uma história:</Text>
-      {stories.map((story) => (
-        <Button
-          key={story.id}
-          title={story.title}
-          onPress={() => handleStorySelection(story.id,story.title)}
-        />
-      ))}
-    </View>
+      <View>
+        <Text style={styles.title}>Selecione uma história:</Text>
+        {stories.map((story) => (
+          <View key={story.id} style={styles.card}>
+            <Button
+              title={story.title}
+              onPress={() => handleStorySelection(story.id, story.title)}
+            />
+          </View>
+        ))}
+      </View>
     </KeyboardAwareScrollView>
   );
 };
@@ -54,69 +52,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     height: "100%",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: "#F5F5F5", // Cor de fundo
+    paddingHorizontal: 16,
   },
-  animationDiv: {
-    height: "50%",
-  },
-  text: {
-    marginBottom: 10,
-  },
-  animation: {
-    alignSelf: "center",
-    height: "100%",
-    backgroundColor: "white",
-  },
-  inputsDiv: {
-    padding: 15,
-  },
-  input: {
-    height: "16%",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    marginBottom: 15,
-    padding: 4,
-    borderWidth: 3,
-    borderColor: "#9e3aec",
-  },
-  button: {
-    backgroundColor: "#9e3aec",
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-  },
-  upperHalf: {
-    height: "70%",
-    paddingHorizontal: 20,
-  },
-  lowerHalf: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: "30%",
-    width: "100%",
+  card: {
+    backgroundColor: "#FFFFFF", // Cor do card
+    marginBottom: 16,
+    borderRadius: 8,
+    padding: 16,
   },
   title: {
-    marginTop: "30%",
-    fontSize: 15,
-    fontWeight: "500",
-    color: "white",
-    fontStyle: "normal",
-  },
-  greetings: {
-    marginTop: "10%",
-    color: "#9E3AEC",
-    fontSize: 36,
-    fontStyle: "normal",
-    fontWeight: "700",
-  },
-  imageDiv: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333333", // Cor do título
+    marginBottom: 16,
   },
 });
 

@@ -20,7 +20,7 @@ const Login = ({navigation}) => {
   const [isLowerHalfVisible, setLowerHalfVisible] = useState(true);
 
   const window = Dimensions.get("window");
-  const isSmallDevice = window.width < 500; 
+  const isSmallDevice = window.width < 300; 
   const shouldShowLowerHalf = isLowerHalfVisible && !isSmallDevice;
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const Login = ({navigation}) => {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.upperHalf}>
-        <Text style={styles.greetings}>Login</Text>
+        <Text style={styles.greetings}>Story. AI</Text>
 
         <View style={styles.animationDiv}>
           <LottieView
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   animationDiv: {
-    height: "50%",
+    height: "30%",
   },
   text: {
     marginBottom: 10,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
   },
   greetings: {
-    
+    marginTop:"30%",
     color: "#9E3AEC",
     fontSize: 36,
     fontStyle: "normal",

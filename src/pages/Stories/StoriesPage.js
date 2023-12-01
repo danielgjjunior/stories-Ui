@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import * as Speech from 'expo-speech';
 
 const PromptView = ({ prompt }) => (
   <View style={styles.promptView}>
@@ -18,12 +19,13 @@ const StoryScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isNextCycleButtonDisabled, setIsNextCycleButtonDisabled] = useState(false);
   const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
+  const [isSpeechStarted, setIsSpeechStarted] = useState(false);
 
   const loadPrompts = async () => {
     try {
       setIsLoading(true);
       const timestamp = new Date().getTime();
-      const response = await fetch(`https://3bb1-179-106-26-98.ngrok.io/prompts/${storyId}?timestamp=${timestamp}`);
+      const response = await fetch(`https://4198-177-85-7-252.ngrok.io/prompts/${storyId}?timestamp=${timestamp}`);
 
       if (!response.ok) {
         throw new Error(`Erro na solicitação: ${response.status}`);
@@ -43,7 +45,7 @@ const StoryScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    // Garante que prompts está definido antes de chamar sendInteraction
+
     if (prompts.length > 0) {
       setCurrentPromptIndex(0);
       sendInteraction();
@@ -53,7 +55,12 @@ const StoryScreen = ({ route }) => {
   useEffect(() => {
     if (prompts.length > 0 && prompts[currentPromptIndex]?.intro) {
       setStoryTextState(prompts[currentPromptIndex].intro);
-      setIsSendButtonDisabled(currentPromptIndex === 0); // Desabilita o botão de enviar no primeiro prompt
+      setIsSendButtonDisabled(currentPromptIndex === 0); 
+
+      if (!isSpeechStarted) {
+        Speech.speak(prompts[currentPromptIndex].intro, { language: 'pt-BR' });
+        setIsSpeechStarted(true);
+      }
     }
   }, [currentPromptIndex, prompts]);
 
@@ -68,7 +75,7 @@ const StoryScreen = ({ route }) => {
       const respostaUsuario = `${currentPrompt.prompt},${currentPrompt.intro},${userInput},${currentPrompt.desfecho}`;
 
       setIsLoading(true);
-      const response = await fetch('https://3bb1-179-106-26-98.ngrok.io/interacao', {
+      const response = await fetch('https://4198-177-85-7-252.ngrok.io/interacao', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,10 +93,16 @@ const StoryScreen = ({ route }) => {
       const responseData = await response.json();
       console.log('Resposta do servidor:', responseData);
 
-      // Exibe a resposta na tela
+    
       setStoryText(responseData.respostaOpenAI);
       setIsNextCycleButtonDisabled(false);
-      setIsSendButtonDisabled(true); // Desabilita o botão de enviar após enviar a resposta
+      setIsSendButtonDisabled(true); 
+
+ 
+      if (!isSpeechStarted) {
+        Speech.speak(responseData.respostaOpenAI, { language: 'pt-BR' });
+        setIsSpeechStarted(true);
+      }
     } catch (error) {
       console.error('Erro ao enviar interação:', error);
     } finally {
@@ -98,18 +111,20 @@ const StoryScreen = ({ route }) => {
   };
 
   const loadNextPrompt = () => {
-    // Avança para o próximo prompt, se não for o último
-    if (currentPromptIndex < prompts.length -1) {
+
+    if (currentPromptIndex < prompts.length - 1) {
       setCurrentPromptIndex(currentPromptIndex + 1);
       setUserInput('');
       setStoryText('');
       setIsNextCycleButtonDisabled(true);
-      setIsSendButtonDisabled(false); // Habilita o botão de enviar ao avançar para o próximo ciclo
+      setIsSendButtonDisabled(false); 
+
+      setIsSpeechStarted(false);
+      Speech.speak(prompts[currentPromptIndex + 1].intro, { language: 'pt-BR' });
     } else {
       console.log('Você atingiu o último prompt.');
       setIsNextCycleButtonDisabled(true);
-      setIsSendButtonDisabled(false); // Habilita o botão de enviar após o último prompt
-      // Aqui você pode adicionar qualquer lógica que desejar após o último prompt
+      setIsSendButtonDisabled(false);
     }
   };
 
@@ -154,23 +169,27 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5', 
   },
   inputContainer: {
+    marginTop:"20%",
     flex: 4,
   },
   input: {
-    height: '70%',
-    borderColor: 'gray',
-    borderWidth: 1,
+    height: '50%', 
+    borderColor: '#9E3AEC', 
+    borderWidth: 2,
     marginBottom: 10,
     padding: 10,
     fontSize: 16,
+    borderRadius: 8, 
   },
   loadingIndicator: {
     marginTop: 20,
   },
   storyText: {
     fontSize: 18,
+    color: '#333333', 
   },
   promptView: {
     flex: 6,
@@ -178,6 +197,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     fontSize: 18,
+    color: '#9E3AEC',
   },
   buttonContainer: {
     marginTop: 20,

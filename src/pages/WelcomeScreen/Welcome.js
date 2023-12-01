@@ -95,8 +95,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animation: {
-    width: 300,
-    height: 100,
+    width: 700,
+    height: 200,
   },
   loadingText: {
     fontSize: 18,
