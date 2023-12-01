@@ -121,7 +121,7 @@ const StoriesPage = ({ route, navigation }) => {
       setIsLastPromptReached(true);
       setIsNextCycleButtonDisabled(true);
       setIsSendButtonDisabled(false);
-      navigation.navigate('EndScreen'); // Navegar para a EndScreen
+      navigation.navigate('EndScreen'); 
     }
   };
 

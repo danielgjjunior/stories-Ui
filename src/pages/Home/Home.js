@@ -1,13 +1,12 @@
-// StorySelectionScreen.jsx
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import axios from 'axios';
 
-// Importe todas as imagens no início do arquivo
+
 import background1 from '../../../assets/images/backgrounds/1.jpg';
 import background2 from '../../../assets/images/backgrounds/2.jpg';
-// ... importe outras imagens conforme necessário
+
 
 const Home = ({ navigation }) => {
   const [stories, setStories] = useState([]);
@@ -41,7 +40,7 @@ const Home = ({ navigation }) => {
           key={story.id}
           style={styles.card}
           onPress={() => handleStorySelection(story.id, story.title)}
-          activeOpacity={0.7}  // Adicione esta linha
+          activeOpacity={0.7}  
         >
           <ImageBackground
             source={getImageSource(story.id)}
@@ -58,16 +57,15 @@ const Home = ({ navigation }) => {
   );
 };
 
-// Função para obter a imagem com base no ID
 const getImageSource = (id) => {
   switch (id) {
     case 1:
       return background1;
     case 2:
       return background2;
-    // Adicione mais casos conforme necessário
+
     default:
-      return background1; // Imagem padrão se o ID não for encontrado
+      return background1; 
   }
 };
 

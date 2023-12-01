@@ -32,7 +32,7 @@ const WelcomeScreen = ({ navigation }) => {
     }
   }, [animationVisible]);
 
-//coloquei esse effect para simular o carregamento por 3 segundos
+
   useEffect(() => {
     if (loading) {
 
