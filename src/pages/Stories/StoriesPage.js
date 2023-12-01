@@ -1,3 +1,4 @@
+// StoriesPage.jsx
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import * as Speech from 'expo-speech';
@@ -8,7 +9,7 @@ const PromptView = ({ prompt }) => (
   </View>
 );
 
-const StoryScreen = ({ route }) => {
+const StoriesPage = ({ route, navigation }) => {
   const { storyId } = route.params;
   const { storyTitle } = route.params;
 
@@ -20,12 +21,13 @@ const StoryScreen = ({ route }) => {
   const [isNextCycleButtonDisabled, setIsNextCycleButtonDisabled] = useState(false);
   const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
   const [isSpeechStarted, setIsSpeechStarted] = useState(false);
+  const [isLastPromptReached, setIsLastPromptReached] = useState(false);
 
   const loadPrompts = async () => {
     try {
       setIsLoading(true);
       const timestamp = new Date().getTime();
-      const response = await fetch(`https://4198-177-85-7-252.ngrok.io/prompts/${storyId}?timestamp=${timestamp}`);
+      const response = await fetch(`https://16d3-200-131-116-2.ngrok.io/prompts/${storyId}?timestamp=${timestamp}`);
 
       if (!response.ok) {
         throw new Error(`Erro na solicitação: ${response.status}`);
@@ -45,7 +47,6 @@ const StoryScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
-
     if (prompts.length > 0) {
       setCurrentPromptIndex(0);
       sendInteraction();
@@ -55,12 +56,9 @@ const StoryScreen = ({ route }) => {
   useEffect(() => {
     if (prompts.length > 0 && prompts[currentPromptIndex]?.intro) {
       setStoryTextState(prompts[currentPromptIndex].intro);
-      setIsSendButtonDisabled(currentPromptIndex === 0); 
+      setIsSendButtonDisabled(currentPromptIndex === 0);
 
-      if (!isSpeechStarted) {
-        Speech.speak(prompts[currentPromptIndex].intro, { language: 'pt-BR' });
-        setIsSpeechStarted(true);
-      }
+      
     }
   }, [currentPromptIndex, prompts]);
 
@@ -75,7 +73,7 @@ const StoryScreen = ({ route }) => {
       const respostaUsuario = `${currentPrompt.prompt},${currentPrompt.intro},${userInput},${currentPrompt.desfecho}`;
 
       setIsLoading(true);
-      const response = await fetch('https://4198-177-85-7-252.ngrok.io/interacao', {
+      const response = await fetch('https://16d3-200-131-116-2.ngrok.io/interacao', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,12 +91,10 @@ const StoryScreen = ({ route }) => {
       const responseData = await response.json();
       console.log('Resposta do servidor:', responseData);
 
-    
       setStoryText(responseData.respostaOpenAI);
       setIsNextCycleButtonDisabled(false);
-      setIsSendButtonDisabled(true); 
+      setIsSendButtonDisabled(true);
 
- 
       if (!isSpeechStarted) {
         Speech.speak(responseData.respostaOpenAI, { language: 'pt-BR' });
         setIsSpeechStarted(true);
@@ -111,20 +107,21 @@ const StoryScreen = ({ route }) => {
   };
 
   const loadNextPrompt = () => {
-
     if (currentPromptIndex < prompts.length - 1) {
       setCurrentPromptIndex(currentPromptIndex + 1);
       setUserInput('');
       setStoryText('');
       setIsNextCycleButtonDisabled(true);
-      setIsSendButtonDisabled(false); 
+      setIsSendButtonDisabled(false);
 
       setIsSpeechStarted(false);
       Speech.speak(prompts[currentPromptIndex + 1].intro, { language: 'pt-BR' });
     } else {
       console.log('Você atingiu o último prompt.');
+      setIsLastPromptReached(true);
       setIsNextCycleButtonDisabled(true);
       setIsSendButtonDisabled(false);
+      navigation.navigate('EndScreen'); // Navegar para a EndScreen
     }
   };
 
@@ -141,7 +138,7 @@ const StoryScreen = ({ route }) => {
         <Button
           title="Enviar"
           onPress={sendInteraction}
-          disabled={isSendButtonDisabled || isLoading || currentPromptIndex === prompts.length +1}
+          disabled={isSendButtonDisabled || isLoading || currentPromptIndex === prompts.length + 1}
         />
       </View>
 
@@ -169,27 +166,27 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'space-between',
-    backgroundColor: '#F5F5F5', 
+    backgroundColor: '#F5F5F5',
   },
   inputContainer: {
-    marginTop:"20%",
+    marginTop: "20%",
     flex: 4,
   },
   input: {
-    height: '50%', 
-    borderColor: '#9E3AEC', 
+    height: '50%',
+    borderColor: '#9E3AEC',
     borderWidth: 2,
     marginBottom: 10,
     padding: 10,
     fontSize: 16,
-    borderRadius: 8, 
+    borderRadius: 8,
   },
   loadingIndicator: {
     marginTop: 20,
   },
   storyText: {
     fontSize: 18,
-    color: '#333333', 
+    color: '#333333',
   },
   promptView: {
     flex: 6,
@@ -204,4 +201,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StoryScreen;
+export default StoriesPage;

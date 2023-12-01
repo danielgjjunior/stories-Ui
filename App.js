@@ -9,6 +9,8 @@ import Login from "./src/pages/Login/Login.js";
 import Home from "./src/pages/Home/Home.js";
 import Welcome from "./src/pages/WelcomeScreen/Welcome.js";
 import Stories from "./src/pages/Stories/StoriesPage.js"
+import StoriesDetailsPage from "./src/pages/Stories/StoriesDetailsPage.js"
+import EndScreen from './src/pages/EndScreen/EndScreen.js'
 
 LogBox.ignoreAllLogs(true);
 
@@ -34,8 +36,18 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="StoriesDetailsPage"
+          component={StoriesDetailsPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Stories"
           component={Stories}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EndScreen"
+          component={EndScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
